@@ -16,16 +16,16 @@ emit OUT_03(high);
 // BUTTONS
 
 code/await MFS_Buttons (none) -> (event (int,high/low) e) -> NEVER do
-    emit PCINT1_ENABLE(on, _PCINT9);
-    emit PCINT1_ENABLE(on, _PCINT10);
-    emit PCINT1_ENABLE(on, _PCINT11);
+    call PCINT1_Enable(_PCINT9,  on);
+    call PCINT1_Enable(_PCINT10, on);
+    call PCINT1_Enable(_PCINT11, on);
     do finalize with
-        emit PCINT1_ENABLE(off, _PCINT9);
-        emit PCINT1_ENABLE(off, _PCINT10);
-        emit PCINT1_ENABLE(off, _PCINT11);
+        call PCINT1_Enable(_PCINT9,  off);
+        call PCINT1_Enable(_PCINT10, off);
+        call PCINT1_Enable(_PCINT11, off);
     end
 
-    var& PCINT1_One pcint1 = spawn PCINT1_One();
+    var& PCINT1_Demux pcint1 = spawn PCINT1_Demux();
     var int pin;
     var high/low v;
     every (pin,v) in pcint1.e do
@@ -36,6 +36,8 @@ code/await MFS_Buttons (none) -> (event (int,high/low) e) -> NEVER do
                 escape _A2;
             else/if pin == _PCINT11 then
                 escape _A3;
+            else
+                _ceu_arduino_assert(0, 2);
             end
         end;
         emit e(pin_,v);
