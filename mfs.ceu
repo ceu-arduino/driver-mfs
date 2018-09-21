@@ -1,6 +1,13 @@
 #include "out.ceu"
 #include "pcint1.ceu"
 
+// LEDS
+
+output bool OUT_13; // D1
+output bool OUT_12; // D2
+output bool OUT_11; // D3
+output bool OUT_10; // D4
+
 // BUZZER
 
 output high/low OUT_03;
@@ -43,13 +50,13 @@ output high/low OUT_08;
 
 var[4]  byte mfs_display_seg = [ 0xF1, 0xF2, 0xF4, 0xF8 ];
 var[10] byte mfs_display_map = [ 0xC0, 0xF9, 0xA4, 0xB0, 0x99, 0x92, 0x82, 0xF8, 0X80, 0X90 ];
-var[4]  int  mfs_display_vec = [ 0xFF,0xFF,0xFF,0xFF ];
+var[4]  int  mfs_display_vec = [ 0, 0, 0, 0 ];
 
 do
     var int i;
     loop i in [0 -> 4[ do
         _digitalWrite(4, 0);
-        _shiftOut(8, 7, _MSBFIRST, mfs_display_vec[i]);
+        _shiftOut(8, 7, _MSBFIRST, 0xFF);
         _shiftOut(8, 7, _MSBFIRST, mfs_display_seg[i]);
         _digitalWrite(4, 1);
     end
